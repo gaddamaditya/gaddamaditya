@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 5  // Define the maximum size of the queue
+
+// Queue structure
+struct Queue {
+    int items[MAX_SIZE];
+    int front, rear;
+};
+
+// Function to initialize the queue
+void initQueue(struct Queue* q) {
+    q->front = -1;
+    q->rear = -1;
+}
+
+// Enqueue operation (insert an element into the queue)
+void enqueue(struct Queue* q, int value) {
+    if (q->rear == MAX_SIZE - 1) {
+        printf("Queue is full!\n");
+    } else {
+        if (q->front == -1) {
+            q->front = 0;  // First element being inserted
+        }
+        q->rear++;
+        q->items[q->rear] = value;
+        printf("Enqueued: %d\n", value);
+    }
+}
+
+// Dequeue operation (remove an element from the front of the queue)
+void dequeue(struct Queue* q) {
+    if (q->front == -1) {
+        printf("Queue is empty!\n");
+    } else {
+        int value = q->items[q->front];
+        printf("Dequeued: %d\n", value);
+        q->front++;
+        if (q->front > q->rear) {
+            q->front = q->rear = -1;  // Reset the queue if it's empty
+        }
+    }
+}
+
+// Function to find an element in the queue
+int find(struct Queue* q, int value) {
+    if (q->front == -1) {
+        printf("Queue is empty!\n");
+        return -1;  // Return -1 if the queue is empty
+    }
+    for (int i = q->front; i <= q->rear; i++) {
+        if (q->items[i] == value) {
+            return i;  // Return the index of the element
+        }
+    }
+    return -1;  // Return -1 if the element is not found
+}
+
+// Function to display the queue
+void display(struct Queue* q) {
+    if (q->front == -1) {
+        printf("Queue is empty!\n");
+    } else {
+        printf("Queue: ");
+        for (int i = q->front; i <= q->rear; i++) {
+            printf("%d ", q->items[i]);
+        }
+        printf("\n");
+    }
+}
+
+// Main function
+int main() {
+    struct Queue q;
+    initQueue(&q);  // Initialize the queue
+
+    // Test the queue operations
+    enqueue(&q, 10);
+    enqueue(&q, 20);
+    enqueue(&q, 30);
+    enqueue(&q, 40);
+    enqueue(&q, 50);
+    
+    display(&q);  // Display queue
+
+    dequeue(&q);  // Dequeue an element
+    display(&q);  // Display queue after dequeue
+
+    int index = find(&q, 30);  // Find an element
+    if (index != -1) {
+        printf("Element 30 found at index %d\n", index);
+    } else {
+        printf("Element not found in the queue\n");
+    }
+
+    return 0;
+}
