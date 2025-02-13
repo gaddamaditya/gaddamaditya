@@ -1,1 +1,110 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 5  // Maximum size of the queue
+
+// Circular Queue structure
+typedef struct {
+    int arr[MAX_SIZE];  // Array to hold the elements of the queue
+    int front;          // Points to the first element
+    int rear;           // Points to the next available slot for insertion
+} CircularQueue;
+
+// Function to initialize the queue
+void initializeQueue(CircularQueue* queue) {
+    queue->front = 0;
+    queue->rear = 0;
+}
+
+// Check if the queue is full
+int isFull(CircularQueue* queue) {
+    return ((queue->rear + 1) % MAX_SIZE == queue->front);
+}
+
+// Check if the queue is empty
+int isEmpty(CircularQueue* queue) {
+    return (queue->front == queue->rear);
+}
+
+// Enqueue operation (Insert element into the queue)
+void enqueue(CircularQueue* queue, int element) {
+    if (isFull(queue)) {
+        printf("Queue is full!\n");
+    } else {
+        queue->arr[queue->rear] = element;
+        queue->rear = (queue->rear + 1) % MAX_SIZE;
+        printf("Enqueued %d\n", element);
+    }
+}
+
+// Dequeue operation (Remove element from the front of the queue)
+int dequeue(CircularQueue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty!\n");
+        return -1;
+    } else {
+        int dequeuedElement = queue->arr[queue->front];
+        queue->front = (queue->front + 1) % MAX_SIZE;
+        printf("Dequeued %d\n", dequeuedElement);
+        return dequeuedElement;
+    }
+}
+
+// Find element in the queue
+int findElement(CircularQueue* queue, int element) {
+    int i = queue->front;
+    while (i != queue->rear) {
+        if (queue->arr[i] == element) {
+            return 1;  // Element found
+        }
+        i = (i + 1) % MAX_SIZE;
+    }
+    return 0;  // Element not found
+}
+
+// Function to display the elements in the queue
+void displayQueue(CircularQueue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty!\n");
+        return;
+    }
+
+    int i = queue->front;
+    printf("Queue elements: ");
+    while (i != queue->rear) {
+        printf("%d ", queue->arr[i]);
+        i = (i + 1) % MAX_SIZE;
+    }
+    printf("\n");
+}
+
+// Main function to test the Circular Queue operations
+int main() {
+    CircularQueue queue;
+    initializeQueue(&queue);
+
+    // Test enqueue and dequeue operations
+    enqueue(&queue, 10);
+    enqueue(&queue, 20);
+    enqueue(&queue, 30);
+    enqueue(&queue, 40);
+    enqueue(&queue, 50);
+    displayQueue(&queue);
+
+    enqueue(&queue, 60);  // This will show that the queue is full
+
+    dequeue(&queue);
+    dequeue(&queue);
+    displayQueue(&queue);
+
+    // Test findElement function
+    int element = 30;
+    if (findElement(&queue, element)) {
+        printf("Element %d found in the queue.\n", element);
+    } else {
+        printf("Element %d not found in the queue.\n", element);
+    }
+
+    return 0;
+}
